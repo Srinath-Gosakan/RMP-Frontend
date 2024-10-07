@@ -6,13 +6,13 @@ import ProfCard from './Components/ProfCard'
 const professors = [
   {
     name : 'Dr.Kannan K',
-    src : 'http://localhost:5000/images/image_C007.jpg',
+    src : 'https://rmp-backend.vercel.app/images/image_C007.jpg',
     rating : 4.5,
     feedback :  'Great Professor'
   },
   {
     name : 'Dr.Uma Mageshwari',
-    src : 'http://localhost:5000/images/image_C130.jpg',
+    src : 'https://rmp-backend.vercel.app/images/image_C130.jpg',
     rating : 4.0,
     feedback :  'Good Professor'
   }
