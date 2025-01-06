@@ -1,0 +1,23 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: var(--background-color);
+  }
+  
+  .nav-links a {
+    margin: 0 10px;
+    text-decoration: none;
+    color: var(--text-color);
+  }
+  
+  .nav-links .active {
+    border-bottom: 2px solid var(--accent-color);
+  }
+  
+  .toggle-container {
+    display: flex;
+    align-items: center;
+  }
+  

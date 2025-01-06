@@ -1,42 +1,43 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect, createContext, useCallback } from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Navbar from './Components/Navbar/Navbar';
+import Home from './Pages/Home/Home';
+import RatePage from './Pages/Rate/Rate';
+import { GoogleOAuthProvider } from '@react-oauth/google';  // Importing OAuth Provider
 import './App.css';
-import logo from './assets/images.png';
-import ProfCard from './Components/ProfCard';
 
-function App() {
-  const [professors, setProfessors] = useState([]);
+export const ImageCacheContext = createContext(new Map());
 
-  // Fetch professor details from the backend
+const App = () => {
+  const [theme, setTheme] = useState('light');
+  const [user, setUser] = useState(null);  // Store user information
+
   useEffect(() => {
-    const fetchProfessors = async () => {
-      try {
-        const response = await fetch('http://localhost:5000/professors'); // Adjust the URL if necessary
-        const data = await response.json();
-        // Map the data to the expected format for ProfCard
-        const formattedData = data.map(prof => ({
-          name: prof.profName,
-          src: prof.image,
-          rating: 'N/A', // Assuming no rating is available from the backend
-          feedback: 'No feedback available' // Assuming no feedback is available from the backend
-        }));
-        setProfessors(formattedData);
-      } catch (error) {
-        console.error('Error fetching professors:', error);
-      }
-    };
-
-    fetchProfessors();
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    setTheme(savedTheme);
+    document.documentElement.setAttribute('data-theme', savedTheme);
   }, []);
+
+  const toggleTheme = useCallback(() => {
+    const newTheme = theme === 'light' ? 'dark' : 'light';
+    setTheme(newTheme);
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+  }, [theme]);
+
   return (
-    <>
-      <img src={logo} alt="logo" />
-      <div className="profCards">
-        {professors.map(({ name, src, rating, feedback }, index) => (
-          <ProfCard key={index} name={name} imgSrc={src} rating={rating} feedback={feedback} />
-        ))}
-      </div>
-    </>
+    <GoogleOAuthProvider clientId="948515176945-sjmmegljddvn9bqatuepinc17b7b2ki4.apps.googleusercontent.com"> 
+      <ImageCacheContext.Provider value={new Map()}>
+        <Router>
+          <Navbar theme={theme} toggleTheme={toggleTheme} user={user} setUser={setUser} />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/rate" element={<RatePage />} />
+          </Routes>
+        </Router>
+      </ImageCacheContext.Provider>
+    </GoogleOAuthProvider>
   );
-}
+};
 
 export default App;
