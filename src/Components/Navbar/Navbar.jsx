@@ -1,6 +1,5 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { GoogleLogin } from '@react-oauth/google';  // Import GoogleLogin component
 import './Navbar.css';
 
 const Navbar = ({ theme, toggleTheme, user, setUser }) => {
@@ -9,9 +8,6 @@ const Navbar = ({ theme, toggleTheme, user, setUser }) => {
     setUser(response);  // Store the user's information in state
   };
 
-  const handleLoginFailure = (error) => {
-    console.error('Login failed: ', error);
-  };
 
   return (
     <div className="header">
@@ -34,17 +30,6 @@ const Navbar = ({ theme, toggleTheme, user, setUser }) => {
         />
         <label htmlFor="themeToggle">Dark Mode</label>
       </div>
-      {user ? (
-        <div className="user-info">
-          <span>Welcome, {user.profile.name}</span>
-          <img src={user.profile.picture} alt="User" className="user-avatar" />
-        </div>
-      ) : (
-        <GoogleLogin 
-          onSuccess={handleLoginSuccess}
-          onError={handleLoginFailure}
-        />
-      )}
     </div>
   );
 };

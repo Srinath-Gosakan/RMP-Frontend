@@ -26,7 +26,6 @@ const App = () => {
   }, [theme]);
 
   return (
-    <GoogleOAuthProvider clientId="948515176945-sjmmegljddvn9bqatuepinc17b7b2ki4.apps.googleusercontent.com"> 
       <ImageCacheContext.Provider value={new Map()}>
         <Router>
           <Navbar theme={theme} toggleTheme={toggleTheme} user={user} setUser={setUser} />
@@ -36,7 +35,6 @@ const App = () => {
           </Routes>
         </Router>
       </ImageCacheContext.Provider>
-    </GoogleOAuthProvider>
   );
 };
 

@@ -22,7 +22,7 @@ const ProfCard = ({ name, profID, rating, feedbacks }) => {
         if (entry.isIntersecting) {
           try {
             const res = await axios.get(
-              `https://rmp-backend.vercel.app/api/professor/${profID}/image`
+              `http://localhost:5000/api/professor/${profID}/image`
             );
             const cloudinaryUrl = res.data.imageUrl;
             imageCache.set(profID, cloudinaryUrl);
