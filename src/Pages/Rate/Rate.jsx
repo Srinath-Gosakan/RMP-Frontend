@@ -1,146 +1,129 @@
-import React, { useState, useEffect } from 'react';
+// src/Pages/Rate/Rate.jsx
+import React, { useEffect, useState, useContext } from 'react';
+import { useLocation } from 'react-router-dom';
+import { ImageCacheContext } from '../../App';
+import default_dp from '/default.jpg';
 import axios from 'axios';
 import './Rate.css';
 
-const RatePage = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [rating, setRating] = useState(0);
+const RatePage = ({ user }) => {
+  const location = useLocation();
+  const profID = new URLSearchParams(location.search).get('profID');
+  const [professor, setProfessor] = useState(null);
+  const [existingRating, setExistingRating] = useState(null);
+  const [stars, setStars] = useState(0);
+  const [hover, setHover] = useState(0);
   const [feedback, setFeedback] = useState('');
-  const [hoverRating, setHoverRating] = useState(0);
-  const [professors, setProfessors] = useState([]);
-  const [filteredProfessors, setFilteredProfessors] = useState([]);
-  const [studentId, setStudentId] = useState(''); 
+  const [status, setStatus] = useState('');
+  const [image, setImage] = useState(default_dp);
+  const [loadingImage, setLoadingImage] = useState(true);
+  const imageCache = useContext(ImageCacheContext);
   
-  // Fetch professors data
+
   useEffect(() => {
-    const fetchProfessors = async () => {
+    if (!profID) return;
+
+    const fetchProfessor = async () => {
       try {
-        const res = await axios.get('https://rmp-backend.vercel.app/api/professors');
-        setProfessors(res.data);
-      } catch (error) {
-        console.error('Error fetching professors:', error);
+        const res = await axios.get(`http://localhost:8080/api/professor/${profID}`);
+        setProfessor(res.data);
+        if (imageCache.has(profID)) {
+          setImage(imageCache.get(profID));
+          setLoadingImage(false);
+        } else {
+          const imgRes = await axios.get(`http://localhost:8080/api/professor/${profID}/image`);
+          const imgUrl = imgRes.data.imageUrl;
+          imageCache.set(profID, imgUrl);
+          setImage(imgUrl);
+          setLoadingImage(false);
+        }
+      } catch (err) {
+        console.error('Error fetching professor:', err);
       }
     };
-    fetchProfessors();
-  }, []);
 
-  // Handle search input change
-  const handleSearch = (e) => {
-    const value = e.target.value;
-    setSearchTerm(value);
+    const fetchRating = async () => {
+      try {
+        const res = await axios.get(`http://localhost:8080/api/rate/${profID}`, {
+          withCredentials: true,
+        });
 
-    const filtered = professors.filter((prof) =>
-      prof.name.toLowerCase().includes(value.toLowerCase())
-    );
-    setFilteredProfessors(filtered);
-  };
-
-  // Handle professor selection from the dropdown
-  const handleSelectProfessor = (professorName) => {
-    setSearchTerm(professorName);
-    setFilteredProfessors([]);  // Hide the dropdown after selection
-  };
-
-  // Handle form submission
-  const handleSubmit = async () => {
-    if (!searchTerm || rating === 0 || !feedback.trim()) {
-      alert('Please fill out all fields before submitting.');
-      return;
-    }
-
-    const selectedProfessor = professors.find((prof) => prof.name === searchTerm);
-    if (!selectedProfessor) {
-      alert('Professor not found.');
-      return;
-    }
-
-    const profID = selectedProfessor.profID;
-
-    // Prepare the data to be sent to the backend
-    const data = {
-      studentId,
-      profID,
-      rating,
-      feedback
+        if (res.data.rated) {
+          setExistingRating(res.data);
+          setStars(res.data.rating);
+          setFeedback(res.data.feedback);
+        }
+      } catch (err) {
+        console.error('Error fetching rating:', err);
+      }
     };
+    fetchProfessor();
+    fetchRating();
+  }, [profID]);
 
+  const handleSubmit = async () => {
     try {
-      const res = await axios.post('https://rmp-backend.vercel.app/api/rate', data);
-      alert(res.data.message);  // Display the response message from the backend
-      setSearchTerm('');
-      setRating(0);
-      setFeedback('');
-    } catch (error) {
-      console.error('Error submitting rating:', error);
-      alert('Error submitting rating.');
+      const res = await axios.post(
+        `http://localhost:8080/api/rate/${profID}`,
+        { rating: stars, feedback },
+        { withCredentials: true }
+      );
+      setStatus(res.data.message);
+    } catch (err) {
+      setStatus(err.response?.data?.message || 'Error submitting rating');
     }
   };
 
-  // Handle form clear
   const handleClear = () => {
-    setSearchTerm('');
-    setRating(0);
+    setStars(0);
     setFeedback('');
+    setStatus('');
   };
 
   return (
-    <div className="rate-page">
-      <h1 className="rate-title">Rate Your Professor</h1>
-      <div className="rate-container">
-        {/* Search input */}
-        <input
-          type="text"
-          placeholder="Search professors..."
-          value={searchTerm}
-          onChange={handleSearch}
-          className="professor-search"
-        />
-        {/* Dropdown for matching professors */}
-        {searchTerm && filteredProfessors.length > 0 && (
-          <ul className="dropdown">
-            {filteredProfessors.map((professor) => (
-              <li
-                key={professor.profID}
-                className="dropdown-item"
-                onClick={() => handleSelectProfessor(professor.name)}  // Use handleSelectProfessor to hide dropdown
-              >
-                {professor.name}
-              </li>
-            ))}
-          </ul>
-        )}
+    <div className="rate-container">
+      {professor ? (
+        <div className="rate-card">
+          {loadingImage ? (
+            <div className="loader"></div>
+          ) : (
+            <img src={image} alt={professor.name} className="rate-img" />
+          )}
+          <h2>{professor.name}</h2>
 
-        <div className="star-rating">
-          {[1, 2, 3, 4, 5].map((star) => (
-            <span
-              key={star}
-              className={`star ${hoverRating >= star || rating >= star ? 'filled' : ''}`}
-              onMouseEnter={() => setHoverRating(star)}
-              onMouseLeave={() => setHoverRating(0)}
-              onClick={() => setRating(star)}
-            >
-              ★
-            </span>
-          ))}
+          <div className="stars">
+            {[...Array(10)].map((_, i) => {
+              const value = (i + 1) * 0.5;
+              return (
+                <span
+                  key={value}
+                  className={`star ${hover >= value || stars >= value ? 'filled' : ''}`}
+                  onClick={() => setStars(value)}
+                  onMouseEnter={() => setHover(value)}
+                  onMouseLeave={() => setHover(0)}
+                >
+                  ★
+                </span>
+              );
+            })}
+          </div>
+
+          <textarea
+            value={feedback}
+            onChange={(e) => setFeedback(e.target.value)}
+            placeholder="Your feedback..."
+          ></textarea>
+
+          <div className="rate-actions">
+            <button onClick={handleSubmit}>Submit</button>
+            <button onClick={handleClear} className="clear">Clear</button>
+          </div>
+
+          {status && <p className="status">{status}</p>}
         </div>
-
-        <textarea
-          placeholder="Write your feedback..."
-          value={feedback}
-          onChange={(e) => setFeedback(e.target.value)}
-          className="feedback-textarea"
-        />
-
-        {/* Button container to align buttons side by side */}
-        <div className="button-container">
-          <button onClick={handleClear} className="clear-button">
-            Clear
-          </button>
-          <button onClick={handleSubmit} className="submit-button">
-            Submit Rating
-          </button>
-        </div>
-      </div>
+      ) : (
+        <p>Loading professor details...</p>
+      )}
     </div>
   );
 };

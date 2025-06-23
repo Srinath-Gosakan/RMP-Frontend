@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import axios from 'axios';
-import ProfCard from '../../Components/ProfCard';
+import ProfCard from '../../Components/ProfCard/ProfCard.jsx';
 import './Home.css';
 
-const Home = () => {
+const Home = ({user}) => {
   const [professors, setProfessors] = useState([]);
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
@@ -11,7 +11,7 @@ const Home = () => {
   const fetchProfessors = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await axios.get('http://localhost:5000/api/professors');
+      const res = await axios.get(`http://localhost:8080/api/professors`);
       setProfessors(res.data);
     } catch (error) {
       console.error('Error fetching professors:', error);
@@ -61,6 +61,7 @@ const Home = () => {
               profID={professor.profID}
               rating={professor.rating}
               feedbacks={professor.feedback}
+              user={user}
             />
           ))}
         </div>
