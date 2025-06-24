@@ -1,0 +1,157 @@
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeOverlay 0.3s ease;
+}
+
+.modal-content {
+  background-color: var(--card-background);
+  border-radius: 16px;
+  padding: 24px;
+  width: 90%;
+  max-width: 700px;
+  position: relative;
+  display: flex;
+  gap: 20px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  animation: fadeInModal 0.3s ease forwards;
+  transform: translateY(-20px);
+  opacity: 0;
+}
+
+@keyframes fadeInModal {
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOverlay {
+  from {
+    background-color: rgba(0, 0, 0, 0);
+  }
+  to {
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+}
+
+.modal-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  font-size: 24px;
+  background: none;
+  border: none;
+  color: var(--text-color);
+  cursor: pointer;
+}
+
+.modal-body {
+  display: flex;
+  gap: 24px;
+}
+
+.modal-image {
+  width: 150px;
+  height: 150px;
+  border-radius: 8px;
+  object-fit: cover;
+  border: 2px solid var(--card-border);
+}
+
+.modal-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.modal-info h2 {
+  font-size: 20px;
+  margin-bottom: 8px;
+  color: var(--text-color);
+}
+
+.modal-rating {
+  font-size: 16px;
+  margin-bottom: 12px;
+  color: var(--text-color);
+}
+
+.modal-feedback {
+  font-size: 15px;
+  color: var(--text-color);
+  background-color: var(--background-color);
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid var(--card-border);
+  margin-bottom: 16px;
+  max-height: 100px;
+  overflow-y: auto;
+}
+
+.modal-nav {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.modal-nav button {
+  padding: 6px 12px;
+  font-size: 13px;
+  border: none;
+  border-radius: 5px;
+  background-color: var(--button-background);
+  color: white;
+  cursor: pointer;
+}
+
+.modal-nav button:hover {
+  background-color: var(--button-hover);
+}
+
+.modal-nav button:disabled {
+  background-color: gray;
+  cursor: not-allowed;
+}
+
+.modal-rate-btn {
+  padding: 10px;
+  background-color: var(--button-background);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.modal-rate-btn:hover {
+  background-color: var(--button-hover);
+}
+
+@media (max-width: 600px) {
+  .modal-body {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .modal-image {
+    width: 120px;
+    height: 120px;
+  }
+
+  .modal-info {
+    width: 100%;
+    align-items: center;
+  }
+
+  .modal-nav {
+    justify-content: center;
+  }
+}

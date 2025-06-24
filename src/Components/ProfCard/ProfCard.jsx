@@ -3,12 +3,13 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import default_dp from '/default.jpg';
 import { ImageCacheContext } from '../../App';
+import ProfModal from '../ProfModal/ProfModal';
 import './ProfCard.css';
 
 const ProfCard = ({ name, profID, rating, feedbacks = [], user }) => {
   const [image, setImage] = useState(default_dp);
   const [loading, setLoading] = useState(true);
-  const [expanded, setExpanded] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
   const [currentFeedbackIndex, setCurrentFeedbackIndex] = useState(0);
   const cardRef = useRef();
   const imageCache = useContext(ImageCacheContext);
@@ -43,8 +44,7 @@ const ProfCard = ({ name, profID, rating, feedbacks = [], user }) => {
     return () => observer.disconnect();
   }, [profID, imageCache]);
 
-  const handleRateClick = (e) => {
-    e.stopPropagation();
+  const handleRateClick = () => {
     if (user) {
       navigate(`/rate?profID=${profID}`);
     } else {
@@ -52,58 +52,40 @@ const ProfCard = ({ name, profID, rating, feedbacks = [], user }) => {
     }
   };
 
-  const handleNextFeedback = (e) => {
-    e.stopPropagation();
+  const handleNextFeedback = () => {
     setCurrentFeedbackIndex((prev) => Math.min(prev + 1, feedbacks.length - 1));
   };
 
-  const handlePreviousFeedback = (e) => {
-    e.stopPropagation();
+  const handlePreviousFeedback = () => {
     setCurrentFeedbackIndex((prev) => Math.max(prev - 1, 0));
   };
 
   return (
-    <div
-      className={`card ${expanded ? 'expanded' : ''}`}
-      ref={cardRef}
-      onClick={() => setExpanded((prev) => !prev)}
-    >
-      {loading ? (
-        <div className="loader"></div>
-      ) : (
-        <img src={image} alt={`Professor ${name}`} className="professor-image" />
-      )}
-      <h2>{name}</h2>
-      <h3>Rating: {rating?.toFixed(1)} ⭐</h3>
+    <>
+      <div className="card" ref={cardRef} onClick={() => setModalOpen(true)}>
+        {loading ? (
+          <div className="loader"></div>
+        ) : (
+          <img src={image} alt={`Professor ${name}`} className="professor-image" />
+        )}
+        <h2>{name}</h2>
+        <h3>Rating: {rating?.toFixed(1)} ⭐</h3>
+      </div>
 
-      <button className="rate-button" onClick={handleRateClick}>
-        Rate
-      </button>
-
-      {expanded && (
-        <div className="feedback-section">
-          <h4>Feedback:</h4>
-          {feedbacks.length > 0 ? (
-            <>
-              <p className="single-feedback">{feedbacks[currentFeedbackIndex]}</p>
-              <div className="slider-buttons">
-                <button onClick={handlePreviousFeedback} disabled={currentFeedbackIndex === 0}>
-                  Previous
-                </button>
-                <button
-                  onClick={handleNextFeedback}
-                  disabled={currentFeedbackIndex === feedbacks.length - 1}
-                >
-                  Next
-                </button>
-              </div>
-            </>
-          ) : (
-            <p>No feedback available.</p>
-          )}
-        </div>
+      {modalOpen && (
+        <ProfModal
+          image={image}
+          name={name}
+          rating={rating}
+          feedbacks={feedbacks}
+          currentIndex={currentFeedbackIndex}
+          onPrev={handlePreviousFeedback}
+          onNext={handleNextFeedback}
+          onRate={handleRateClick}
+          onClose={() => setModalOpen(false)}
+        />
       )}
-    </div>
+    </>
   );
 };
 

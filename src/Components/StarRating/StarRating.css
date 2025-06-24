@@ -1,0 +1,51 @@
+.star-rating-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.star {
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  line-height: 1;
+  font-size: 30px;
+}
+
+.star:hover {
+  transform: scale(1.2);
+}
+
+.star.full {
+  color: gold;
+}
+
+.star.empty {
+  color: #bbb;
+}
+
+.rating-display {
+  font-size: 16px;
+  color: var(--text-color);
+  margin-left: 8px;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .star {
+    font-size: 26px;
+  }
+
+  .rating-display {
+    font-size: 14px;
+    margin-top: 4px;
+    width: 100%;
+    text-align: center;
+  }
+
+  .star-rating-wrapper {
+    gap: 6px;
+  }
+}

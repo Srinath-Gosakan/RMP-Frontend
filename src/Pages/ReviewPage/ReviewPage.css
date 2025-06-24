@@ -1,0 +1,180 @@
+.reviewed-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.search-bar {
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.search-bar input {
+  width: 80%;
+  max-width: 500px;
+  padding: 12px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--card-border);
+  font-size: 15px;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  transition: border-color 0.3s ease;
+}
+
+.search-bar input:focus {
+  outline: none;
+  border-color: var(--accent-color);
+}
+
+.professor-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 20px;
+}
+
+.prof-card {
+  background-color: var(--card-background);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease;
+}
+
+.prof-card:hover {
+  transform: translateY(-3px);
+}
+
+.prof-image {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 2px solid var(--card-border);
+}
+
+.prof-info {
+  flex: 1;
+}
+
+.prof-info h3 {
+  margin: 0 0 6px 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.prof-info p {
+  font-size: 14px;
+  color: var(--text-color);
+  margin: 4px 0;
+}
+
+.prof-feedback {
+  max-height: 80px;
+  overflow-y: auto;
+  background-color: var(--background-color);
+  border-radius: 6px;
+  padding: 8px;
+  border: 1px solid var(--card-border);
+  margin-top: 6px;
+}
+
+.button-group {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+/* Shared button styles */
+.modify-btn,
+.delete-btn {
+  padding: 9px 14px;
+  font-size: 14px;
+  line-height: 1.4;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  color: white;
+  flex: 1;
+  min-width: 100px;
+  text-align: center;
+}
+
+/* Modify button specific */
+.modify-btn {
+  background-color: var(--button-background);
+}
+
+.modify-btn:hover {
+  background-color: var(--button-hover);
+  transform: scale(1.03);
+}
+
+/* Delete button specific */
+.delete-btn {
+  background-color: #dc3545;
+}
+
+.delete-btn:hover {
+  background-color: #c82333;
+  transform: scale(1.03);
+}
+
+.no-reviews-message {
+  grid-column: 1 / -1;
+  text-align: center;
+  font-size: 16px;
+  color: var(--text-color);
+  padding: 40px 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .prof-card {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .prof-image {
+    width: 90px;
+    height: 90px;
+  }
+
+  .prof-info {
+    width: 100%;
+  }
+
+  .button-group {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .search-bar input {
+    width: 90%;
+    padding: 10px 14px;
+    font-size: 14px;
+  }
+
+  .modify-btn,
+  .delete-btn {
+    font-size: 13px;
+    padding: 8px 12px;
+  }
+
+  .prof-info h3 {
+    font-size: 16px;
+  }
+
+  .prof-info p {
+    font-size: 13px;
+  }
+}

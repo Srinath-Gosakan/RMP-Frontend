@@ -4,6 +4,7 @@ import Navbar from './Components/Navbar/Navbar';
 import Home from './Pages/Home/Home';
 import RatePage from './Pages/Rate/Rate';
 import LoginFailed from './Pages/LoginFailed/LoginFailed';
+import ReviewedProfessorsPage from './Pages/ReviewPage/ReviewPage';
 import './App.css';
 
 export const ImageCacheContext = createContext(new Map());
@@ -56,7 +57,8 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Home user={user} />} />
           <Route path="/rate" element={<RatePage user={user} />} />
-          <Route path="/login-failed" element={<LoginFailed />} />  
+          <Route path="/login-failed" element={<LoginFailed />} /> 
+          <Route path="/reviewed" element={<ReviewedProfessorsPage />} />
         </Routes>
       </Router>
     </ImageCacheContext.Provider>

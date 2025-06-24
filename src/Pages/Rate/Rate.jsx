@@ -1,126 +1,92 @@
-// src/Pages/Rate/Rate.jsx
 import React, { useEffect, useState, useContext } from 'react';
-import { useLocation } from 'react-router-dom';
-import { ImageCacheContext } from '../../App';
-import default_dp from '/default.jpg';
+import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import default_dp from '/default.jpg';
+import { ImageCacheContext } from '../../App';
+import StarRating from '../../Components/StarRating/StarRating';
 import './Rate.css';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-const RatePage = ({ user }) => {
+const RatePage = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const profID = new URLSearchParams(location.search).get('profID');
-  const [professor, setProfessor] = useState(null);
-  const [existingRating, setExistingRating] = useState(null);
-  const [stars, setStars] = useState(0);
-  const [hover, setHover] = useState(0);
-  const [feedback, setFeedback] = useState('');
-  const [status, setStatus] = useState('');
-  const [image, setImage] = useState(default_dp);
-  const [loadingImage, setLoadingImage] = useState(true);
   const imageCache = useContext(ImageCacheContext);
-  
+
+  const [professor, setProfessor] = useState(null);
+  const [image, setImage] = useState(default_dp);
+  const [rating, setRating] = useState(0);
+  const [feedback, setFeedback] = useState('');
 
   useEffect(() => {
-    if (!profID) return;
-
-    const fetchProfessor = async () => {
+    const fetchData = async () => {
       try {
-        const res = await axios.get(`http://localhost:8080/api/professor/${profID}`);
-        setProfessor(res.data);
+        const profRes = await axios.get(`http://localhost:8080/api/professor/${profID}`);
+        setProfessor(profRes.data);
+
         if (imageCache.has(profID)) {
           setImage(imageCache.get(profID));
-          setLoadingImage(false);
         } else {
           const imgRes = await axios.get(`http://localhost:8080/api/professor/${profID}/image`);
-          const imgUrl = imgRes.data.imageUrl;
-          imageCache.set(profID, imgUrl);
-          setImage(imgUrl);
-          setLoadingImage(false);
+          imageCache.set(profID, imgRes.data.imageUrl);
+          setImage(imgRes.data.imageUrl);
         }
-      } catch (err) {
-        console.error('Error fetching professor:', err);
-      }
-    };
 
-    const fetchRating = async () => {
-      try {
-        const res = await axios.get(`http://localhost:8080/api/rate/${profID}`, {
+        const ratingRes = await axios.get(`http://localhost:8080/api/rate/${profID}`, {
           withCredentials: true,
         });
 
-        if (res.data.rated) {
-          setExistingRating(res.data);
-          setStars(res.data.rating);
-          setFeedback(res.data.feedback);
+        if (ratingRes.data.rated) {
+          setRating(ratingRes.data.rating);
+          setFeedback(ratingRes.data.feedback);
         }
       } catch (err) {
-        console.error('Error fetching rating:', err);
+        console.error('Error:', err);
       }
     };
-    fetchProfessor();
-    fetchRating();
-  }, [profID]);
+
+    fetchData();
+  }, [profID, imageCache]);
 
   const handleSubmit = async () => {
     try {
-      const res = await axios.post(
+      await axios.post(
         `http://localhost:8080/api/rate/${profID}`,
-        { rating: stars, feedback },
+        { rating, feedback },
         { withCredentials: true }
       );
-      setStatus(res.data.message);
+      toast.success('Rating submitted successfully!');
     } catch (err) {
-      setStatus(err.response?.data?.message || 'Error submitting rating');
+      toast.error('Error submitting rating!');
     }
-  };
-
-  const handleClear = () => {
-    setStars(0);
-    setFeedback('');
-    setStatus('');
   };
 
   return (
     <div className="rate-container">
       {professor ? (
-        <div className="rate-card">
-          {loadingImage ? (
-            <div className="loader"></div>
-          ) : (
-            <img src={image} alt={professor.name} className="rate-img" />
-          )}
-          <h2>{professor.name}</h2>
-
-          <div className="stars">
-            {[...Array(10)].map((_, i) => {
-              const value = (i + 1) * 0.5;
-              return (
-                <span
-                  key={value}
-                  className={`star ${hover >= value || stars >= value ? 'filled' : ''}`}
-                  onClick={() => setStars(value)}
-                  onMouseEnter={() => setHover(value)}
-                  onMouseLeave={() => setHover(0)}
-                >
-                  ★
-                </span>
-              );
-            })}
+        <>
+          <div className="prof-header">
+            <img src={image || default_dp} alt={professor.name} />
+            <h2>{professor.name}</h2>
           </div>
+
+          <StarRating rating={rating} setRating={setRating} interactive={true} />
 
           <textarea
             value={feedback}
             onChange={(e) => setFeedback(e.target.value)}
             placeholder="Your feedback..."
-          ></textarea>
+          />
 
-          <div className="rate-actions">
-            <button onClick={handleSubmit}>Submit</button>
-            <button onClick={handleClear} className="clear">Clear</button>
+          <div className="rate-buttons">
+            <button className="submit-btn" onClick={handleSubmit}>Submit</button>
+            <button className="clear-btn" onClick={() => { setRating(0); setFeedback(''); }}>Clear</button>
           </div>
 
-          {status && <p className="status">{status}</p>}
-        </div>
+          <button className="home-btn" onClick={() => navigate('/')}>Go to Home</button>
+          <ToastContainer position="top-center" autoClose={2000} hideProgressBar newestOnTop closeOnClick pauseOnHover />
+        </>
       ) : (
         <p>Loading professor details...</p>
       )}
