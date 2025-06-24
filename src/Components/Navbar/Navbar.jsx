@@ -8,12 +8,12 @@ const Navbar = ({ theme, toggleTheme, user, setUser }) => {
   const navigate = useNavigate();
 
   const handleLogin = () => {
-    window.open('http://localhost:8080/api/auth/google', '_self');
+    window.open('https://rmp-backend.vercel.app/api/auth/google', '_self');
   };
 
   const handleLogout = async () => {
     try {
-      await fetch('http://localhost:8080/api/auth/logout', {
+      await fetch('https://rmp-backend.vercel.app/api/auth/logout', {
         method: 'GET',
         credentials: 'include'
       });

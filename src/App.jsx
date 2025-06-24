@@ -24,7 +24,7 @@ const App = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await fetch('http://localhost:8080/api/login/success', {
+        const res = await fetch('https://rmp-backend.vercel.app/api/login/success', {
           credentials: 'include',
         });
 

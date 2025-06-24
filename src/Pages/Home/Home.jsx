@@ -11,7 +11,7 @@ const Home = ({user}) => {
   const fetchProfessors = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await axios.get(`http://localhost:8080/api/professors`);
+      const res = await axios.get(`https://rmp-backend.vercel.app/api/professors`);
       setProfessors(res.data);
     } catch (error) {
       console.error('Error fetching professors:', error);
