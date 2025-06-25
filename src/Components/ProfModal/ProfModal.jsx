@@ -12,10 +12,14 @@ const ProfModal = ({
   onRate,
   onClose
 }) => {
-  // Filter out empty or whitespace-only feedback
-  const validFeedbacks = feedbacks.filter(
-    (f) => typeof f === 'string' && f.trim() !== ''
-  );
+  // Filter out empty/whitespace feedback and remove duplicates
+  const validFeedbacks = [
+    ...new Set(
+      feedbacks
+        .filter((f) => typeof f === 'string' && f.trim() !== '')
+        .map((f) => f.trim()) // optional: you could also add .toLowerCase() if you want case-insensitive deduplication
+    )
+  ];
 
   return (
     <div className="modal-overlay" onClick={onClose}>
