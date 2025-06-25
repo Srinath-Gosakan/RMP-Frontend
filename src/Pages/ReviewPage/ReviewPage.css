@@ -59,6 +59,7 @@
 
 .prof-info {
   flex: 1;
+  word-wrap: break-word;
 }
 
 .prof-info h3 {
@@ -82,6 +83,7 @@
   padding: 8px;
   border: 1px solid var(--card-border);
   margin-top: 6px;
+  word-break: break-word;
 }
 
 .button-group {
@@ -107,7 +109,6 @@
   text-align: center;
 }
 
-/* Modify button specific */
 .modify-btn {
   background-color: var(--button-background);
 }
@@ -117,7 +118,6 @@
   transform: scale(1.03);
 }
 
-/* Delete button specific */
 .delete-btn {
   background-color: #dc3545;
 }
@@ -135,12 +135,13 @@
   padding: 40px 0;
 }
 
-/* Responsive adjustments */
+/* === Responsive Design === */
 @media (max-width: 768px) {
   .prof-card {
     flex-direction: column;
     align-items: center;
     text-align: center;
+    padding: 14px;
   }
 
   .prof-image {
@@ -154,6 +155,7 @@
 
   .button-group {
     justify-content: center;
+    gap: 8px;
   }
 }
 
@@ -164,17 +166,23 @@
     font-size: 14px;
   }
 
-  .modify-btn,
-  .delete-btn {
-    font-size: 13px;
-    padding: 8px 12px;
-  }
-
   .prof-info h3 {
     font-size: 16px;
   }
 
   .prof-info p {
     font-size: 13px;
+  }
+
+  .modify-btn,
+  .delete-btn {
+    font-size: 13px;
+    padding: 8px 12px;
+    flex: 1 1 100%;
+    min-width: unset;
+  }
+
+  .button-group {
+    flex-direction: column;
   }
 }

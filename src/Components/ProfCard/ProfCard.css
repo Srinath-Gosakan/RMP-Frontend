@@ -56,10 +56,37 @@
   transform: scale(1.05);
 }
 
-/* Optional loader for lazy image */
 .loader {
   height: 180px;
   width: 180px;
   background-color: #ccc;
   border-radius: 8px;
+}
+
+@media (max-width: 480px) {
+  .card {
+    width: 90%;
+    max-width: 320px;
+    padding: 16px;
+    margin: 0 auto;
+  }
+
+  .professor-image,
+  .loader {
+    width: 140px;
+    height: 140px;
+  }
+
+  .card h2 {
+    font-size: 16px;
+  }
+
+  .card h3 {
+    font-size: 14px;
+  }
+
+  .rate-button {
+    font-size: 13px;
+    padding: 7px 12px;
+  }
 }

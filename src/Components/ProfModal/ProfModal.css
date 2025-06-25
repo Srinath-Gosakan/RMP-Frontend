@@ -1,14 +1,3 @@
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  animation: fadeOverlay 0.3s ease;
-}
-
 .modal-content {
   background-color: var(--card-background);
   border-radius: 16px;
@@ -22,33 +11,8 @@
   animation: fadeInModal 0.3s ease forwards;
   transform: translateY(-20px);
   opacity: 0;
-}
-
-@keyframes fadeInModal {
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-@keyframes fadeOverlay {
-  from {
-    background-color: rgba(0, 0, 0, 0);
-  }
-  to {
-    background-color: rgba(0, 0, 0, 0.5);
-  }
-}
-
-.modal-close {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  font-size: 24px;
-  background: none;
-  border: none;
-  color: var(--text-color);
-  cursor: pointer;
+  max-height: 90vh;
+  overflow-y: auto;
 }
 
 .modal-body {
@@ -75,6 +39,7 @@
   font-size: 20px;
   margin-bottom: 8px;
   color: var(--text-color);
+  word-wrap: break-word;
 }
 
 .modal-rating {
@@ -99,6 +64,8 @@
   display: flex;
   gap: 10px;
   margin-bottom: 16px;
+  flex-wrap: wrap;
+  justify-content: start;
 }
 
 .modal-nav button {
@@ -109,6 +76,7 @@
   background-color: var(--button-background);
   color: white;
   cursor: pointer;
+  min-width: 100px;
 }
 
 .modal-nav button:hover {
@@ -128,17 +96,22 @@
   border-radius: 6px;
   font-size: 15px;
   cursor: pointer;
+  width: 100%;
+  max-width: 220px;
+  align-self: center;
 }
 
 .modal-rate-btn:hover {
   background-color: var(--button-hover);
 }
 
+/* 💡 Responsive Enhancements */
 @media (max-width: 600px) {
   .modal-body {
     flex-direction: column;
     align-items: center;
     text-align: center;
+    gap: 16px;
   }
 
   .modal-image {
@@ -151,7 +124,31 @@
     align-items: center;
   }
 
+  .modal-info h2 {
+    font-size: 18px;
+  }
+
+  .modal-rating {
+    font-size: 14px;
+  }
+
+  .modal-feedback {
+    font-size: 14px;
+    max-height: 80px;
+  }
+
   .modal-nav {
     justify-content: center;
+    gap: 8px;
+  }
+
+  .modal-nav button {
+    font-size: 13px;
+    padding: 6px 10px;
+  }
+
+  .modal-rate-btn {
+    font-size: 14px;
+    padding: 8px 12px;
   }
 }
