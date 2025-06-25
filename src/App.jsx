@@ -25,7 +25,7 @@ const App = () => {
     const fetchUser = async () => {
       try {
         const res = await fetch('https://rmp-backend.vercel.app/api/login/success', {
-           method: 'GET',
+          method: 'GET',
           credentials: 'include'
         });
 
