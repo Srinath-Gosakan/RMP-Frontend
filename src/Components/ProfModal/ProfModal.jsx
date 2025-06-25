@@ -12,6 +12,11 @@ const ProfModal = ({
   onRate,
   onClose
 }) => {
+  // Filter out empty or whitespace-only feedback
+  const validFeedbacks = feedbacks.filter(
+    (f) => typeof f === 'string' && f.trim() !== ''
+  );
+
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
@@ -22,10 +27,10 @@ const ProfModal = ({
             <h2>{name}</h2>
             <div className="modal-rating">Rating: {rating?.toFixed(1)} ⭐</div>
 
-            {feedbacks.length > 0 ? (
+            {validFeedbacks.length > 0 ? (
               <>
                 <div className="modal-feedback">
-                  "{feedbacks[currentIndex]}"
+                  "{validFeedbacks[currentIndex]}"
                 </div>
                 <div className="modal-nav">
                   <button onClick={onPrev} disabled={currentIndex === 0}>
@@ -33,7 +38,7 @@ const ProfModal = ({
                   </button>
                   <button
                     onClick={onNext}
-                    disabled={currentIndex === feedbacks.length - 1}
+                    disabled={currentIndex === validFeedbacks.length - 1}
                   >
                     Next
                   </button>
