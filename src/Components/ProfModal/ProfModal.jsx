@@ -10,14 +10,14 @@ const ProfModal = ({
   onPrev,
   onNext,
   onRate,
-  onClose
+  onClose,
+  reviewed
 }) => {
-  // Filter out empty/whitespace feedback and remove duplicates
   const validFeedbacks = [
     ...new Set(
       feedbacks
         .filter((f) => typeof f === 'string' && f.trim() !== '')
-        .map((f) => f.trim()) // optional: you could also add .toLowerCase() if you want case-insensitive deduplication
+        .map((f) => f.trim())
     )
   ];
 
@@ -52,8 +52,12 @@ const ProfModal = ({
               <div className="modal-feedback">No feedback available.</div>
             )}
 
-            <button className="modal-rate-btn" onClick={onRate}>
-              Rate
+            <button
+              className="modal-rate-btn"
+              onClick={onRate}
+              disabled={reviewed}
+            >
+              {reviewed ? 'Already Rated' : 'Rate'}
             </button>
           </div>
         </div>

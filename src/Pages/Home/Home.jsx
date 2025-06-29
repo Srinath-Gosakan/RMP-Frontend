@@ -3,8 +3,9 @@ import axios from 'axios';
 import ProfCard from '../../Components/ProfCard/ProfCard.jsx';
 import './Home.css';
 
-const Home = ({user}) => {
+const Home = ({ user }) => {
   const [professors, setProfessors] = useState([]);
+  const [reviewedIDs, setReviewedIDs] = useState([]);
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -20,9 +21,23 @@ const Home = ({user}) => {
     }
   }, []);
 
+  const fetchReviewed = useCallback(async () => {
+    if (!user) return;
+    try {
+      const res = await axios.get(`https://rmp-backend.vercel.app/api/reviewed`, {
+        withCredentials: true,
+      });
+      const ids = res.data.map((p) => p.profID);
+      setReviewedIDs(ids);
+    } catch (err) {
+      console.error('Failed to fetch reviewed professors');
+    }
+  }, [user]);
+
   useEffect(() => {
     fetchProfessors();
-  }, [fetchProfessors]);
+    fetchReviewed();
+  }, [fetchProfessors, fetchReviewed]);
 
   const handleSearch = (e) => setSearchTerm(e.target.value);
 
@@ -60,8 +75,10 @@ const Home = ({user}) => {
               name={professor.name}
               profID={professor.profID}
               rating={professor.rating}
+              ratingCount={professor.ratingCount}
               feedbacks={professor.feedback}
               user={user}
+              reviewed={reviewedIDs.includes(professor.profID)}
             />
           ))}
         </div>

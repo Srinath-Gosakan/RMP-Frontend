@@ -6,7 +6,7 @@ import { ImageCacheContext } from '../../App';
 import ProfModal from '../ProfModal/ProfModal';
 import './ProfCard.css';
 
-const ProfCard = ({ name, profID, rating, feedbacks = [], user }) => {
+const ProfCard = ({ name, profID, rating, ratingCount = 0, feedbacks = [], user, reviewed }) => {
   const [image, setImage] = useState(default_dp);
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
@@ -46,7 +46,11 @@ const ProfCard = ({ name, profID, rating, feedbacks = [], user }) => {
 
   const handleRateClick = () => {
     if (user) {
-      navigate(`/rate?profID=${profID}`);
+      if (reviewed) {
+        alert('You have already rated this professor.');
+      } else {
+        navigate(`/rate?profID=${profID}`);
+      }
     } else {
       alert('Please log in to rate this professor.');
     }
@@ -70,6 +74,7 @@ const ProfCard = ({ name, profID, rating, feedbacks = [], user }) => {
         )}
         <h2>{name}</h2>
         <h3>Rating: {rating?.toFixed(1)} ⭐</h3>
+        <h4>{ratingCount} {ratingCount === 1 ? 'rating' : 'ratings'}</h4>
       </div>
 
       {modalOpen && (
@@ -83,6 +88,7 @@ const ProfCard = ({ name, profID, rating, feedbacks = [], user }) => {
           onNext={handleNextFeedback}
           onRate={handleRateClick}
           onClose={() => setModalOpen(false)}
+          reviewed={reviewed}
         />
       )}
     </>

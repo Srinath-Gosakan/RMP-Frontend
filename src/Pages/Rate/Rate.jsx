@@ -57,6 +57,9 @@ const RatePage = () => {
         { withCredentials: true }
       );
       toast.success('Rating submitted successfully!');
+      setTimeout(() => {
+        navigate('/');
+      }, 2000);
     } catch (err) {
       toast.error('Error submitting rating!');
     }
