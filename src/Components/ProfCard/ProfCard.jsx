@@ -84,6 +84,8 @@ const ProfCard = ({ name, profID, rating, feedbacks = [], user }) => {
     setCurrentFeedbackIndex((prev) => Math.max(prev - 1, 0));
   };
 
+  const validRating = typeof rating === 'number' && rating > 0 && feedbacks.length > 0;
+
   return (
     <>
       <div className="card" ref={cardRef} onClick={() => setModalOpen(true)}>
@@ -94,10 +96,12 @@ const ProfCard = ({ name, profID, rating, feedbacks = [], user }) => {
         )}
         <h2>{name}</h2>
 
-        {typeof rating === 'number' && rating > 0 ? (
+        {validRating ? (
           <>
             <h3>Rating: {rating.toFixed(1)} ⭐</h3>
-            <p className="rating-count">({feedbacks.length} {feedbacks.length === 1 ? 'rating' : 'ratings'})</p>
+            <p className="rating-count">
+              ({feedbacks.length} {feedbacks.length === 1 ? 'rating' : 'ratings'})
+            </p>
           </>
         ) : (
           <h3 className="no-rating">No ratings yet</h3>
@@ -124,7 +128,7 @@ const ProfCard = ({ name, profID, rating, feedbacks = [], user }) => {
           onNext={handleNextFeedback}
           onRate={handleRateClick}
           onClose={() => setModalOpen(false)}
-          reviewed={hasRated} 
+          reviewed={hasRated}
         />
       )}
     </>

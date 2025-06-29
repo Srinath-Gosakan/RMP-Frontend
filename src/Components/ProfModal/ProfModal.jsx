@@ -21,6 +21,8 @@ const ProfModal = ({
     )
   ];
 
+  const validRating = typeof rating === 'number' && rating > 0 && validFeedbacks.length > 0;
+
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
@@ -29,13 +31,12 @@ const ProfModal = ({
           <img src={image} alt={name} className="modal-image" />
           <div className="modal-info">
             <h2>{name}</h2>
-            <div className="modal-rating">
-              {typeof rating === 'number' && rating > 0 ? (
-                <>Rating: {rating.toFixed(1)} ⭐</>
-              ) : (
-                <>No ratings yet</>
-              )}
-            </div>
+
+            {validRating ? (
+              <div className="modal-rating">Rating: {rating.toFixed(1)} ⭐</div>
+            ) : (
+              <div className="modal-rating">No ratings yet</div>
+            )}
 
             {validFeedbacks.length > 0 ? (
               <>
