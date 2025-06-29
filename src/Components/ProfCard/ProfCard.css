@@ -10,6 +10,7 @@
   align-items: center;
   cursor: pointer;
   transition: transform 0.2s ease;
+  height: 100%; /* optional if needed to align cards */
 }
 
 .card:hover {
@@ -39,6 +40,14 @@
   text-align: center;
 }
 
+.rating-wrapper {
+  min-height: 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
 .rating-count {
   font-size: 14px;
   color: #777;
@@ -54,7 +63,7 @@
 }
 
 .rate-button {
-  margin-top: 10px;
+  margin-top: auto;
   padding: 8px 14px;
   background-color: var(--button-background);
   color: white;
@@ -107,5 +116,9 @@
   .rate-button {
     font-size: 13px;
     padding: 7px 12px;
+  }
+
+  .rating-wrapper {
+    min-height: 48px;
   }
 }

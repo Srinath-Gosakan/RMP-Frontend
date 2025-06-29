@@ -16,7 +16,6 @@ const ProfCard = ({ name, profID, rating, feedbacks = [], user }) => {
   const imageCache = useContext(ImageCacheContext);
   const navigate = useNavigate();
 
-  // Lazy load image
   useEffect(() => {
     if (imageCache.has(profID)) {
       setImage(imageCache.get(profID));
@@ -46,7 +45,6 @@ const ProfCard = ({ name, profID, rating, feedbacks = [], user }) => {
     return () => observer.disconnect();
   }, [profID, imageCache]);
 
-  // Check if user already rated
   useEffect(() => {
     const fetchUserRating = async () => {
       if (!user) return;
@@ -96,16 +94,18 @@ const ProfCard = ({ name, profID, rating, feedbacks = [], user }) => {
         )}
         <h2>{name}</h2>
 
-        {validRating ? (
-          <>
-            <h3>Rating: {rating.toFixed(1)} ⭐</h3>
-            <p className="rating-count">
-              ({feedbacks.length} {feedbacks.length === 1 ? 'rating' : 'ratings'})
-            </p>
-          </>
-        ) : (
-          <h3 className="no-rating">No ratings yet</h3>
-        )}
+        <div className="rating-wrapper">
+          {validRating ? (
+            <>
+              <h3>Rating: {rating.toFixed(1)} ⭐</h3>
+              <p className="rating-count">
+                ({feedbacks.length} {feedbacks.length === 1 ? 'rating' : 'ratings'})
+              </p>
+            </>
+          ) : (
+            <h3 className="no-rating">No ratings yet</h3>
+          )}
+        </div>
 
         <button
           className="rate-button"
