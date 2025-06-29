@@ -6,15 +6,17 @@ import { ImageCacheContext } from '../../App';
 import ProfModal from '../ProfModal/ProfModal';
 import './ProfCard.css';
 
-const ProfCard = ({ name, profID, rating, ratingCount = 0, feedbacks = [], user, reviewed }) => {
+const ProfCard = ({ name, profID, rating, feedbacks = [], user }) => {
   const [image, setImage] = useState(default_dp);
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
   const [currentFeedbackIndex, setCurrentFeedbackIndex] = useState(0);
+  const [hasRated, setHasRated] = useState(false);
   const cardRef = useRef();
   const imageCache = useContext(ImageCacheContext);
   const navigate = useNavigate();
 
+  // Lazy load image
   useEffect(() => {
     if (imageCache.has(profID)) {
       setImage(imageCache.get(profID));
@@ -44,11 +46,29 @@ const ProfCard = ({ name, profID, rating, ratingCount = 0, feedbacks = [], user,
     return () => observer.disconnect();
   }, [profID, imageCache]);
 
-  const handleRateClick = () => {
+  // Check if user already rated
+  useEffect(() => {
+    const fetchUserRating = async () => {
+      if (!user) return;
+      try {
+        const res = await axios.get(`https://rmp-backend.vercel.app/api/rate/${profID}`, {
+          withCredentials: true,
+        });
+        if (res.data?.rated) {
+          setHasRated(true);
+        }
+      } catch (error) {
+        console.error('Error checking rating status:', error);
+      }
+    };
+
+    fetchUserRating();
+  }, [user, profID]);
+
+  const handleRateClick = (e) => {
+    e.stopPropagation();
     if (user) {
-      if (reviewed) {
-        alert('You have already rated this professor.');
-      } else {
+      if (!hasRated) {
         navigate(`/rate?profID=${profID}`);
       }
     } else {
@@ -73,8 +93,24 @@ const ProfCard = ({ name, profID, rating, ratingCount = 0, feedbacks = [], user,
           <img src={image} alt={`Professor ${name}`} className="professor-image" />
         )}
         <h2>{name}</h2>
-        <h3>Rating: {rating?.toFixed(1)} ⭐</h3>
-        <h4>{ratingCount} {ratingCount === 1 ? 'rating' : 'ratings'}</h4>
+
+        {typeof rating === 'number' && rating > 0 ? (
+          <>
+            <h3>Rating: {rating.toFixed(1)} ⭐</h3>
+            <p className="rating-count">({feedbacks.length} {feedbacks.length === 1 ? 'rating' : 'ratings'})</p>
+          </>
+        ) : (
+          <h3 className="no-rating">No ratings yet</h3>
+        )}
+
+        <button
+          className="rate-button"
+          onClick={handleRateClick}
+          disabled={hasRated}
+          title={hasRated ? 'You have already rated this professor' : ''}
+        >
+          {hasRated ? 'Rated' : 'Rate'}
+        </button>
       </div>
 
       {modalOpen && (
@@ -88,7 +124,6 @@ const ProfCard = ({ name, profID, rating, ratingCount = 0, feedbacks = [], user,
           onNext={handleNextFeedback}
           onRate={handleRateClick}
           onClose={() => setModalOpen(false)}
-          reviewed={reviewed}
         />
       )}
     </>
