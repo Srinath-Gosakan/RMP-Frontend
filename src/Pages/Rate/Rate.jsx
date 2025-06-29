@@ -22,18 +22,18 @@ const RatePage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const profRes = await axios.get(`https://rmp-backend.vercel.app/api/professor/${profID}`);
+        const profRes = await axios.get(`https://rmp-backend.onrender.com/api/professor/${profID}`);
         setProfessor(profRes.data);
 
         if (imageCache.has(profID)) {
           setImage(imageCache.get(profID));
         } else {
-          const imgRes = await axios.get(`https://rmp-backend.vercel.app/api/professor/${profID}/image`);
+          const imgRes = await axios.get(`https://rmp-backend.onrender.com/api/professor/${profID}/image`);
           imageCache.set(profID, imgRes.data.imageUrl);
           setImage(imgRes.data.imageUrl);
         }
 
-        const ratingRes = await axios.get(`https://rmp-backend.vercel.app/api/rate/${profID}`, {
+        const ratingRes = await axios.get(`https://rmp-backend.onrender.com/api/rate/${profID}`, {
           withCredentials: true,
         });
 
@@ -52,7 +52,7 @@ const RatePage = () => {
   const handleSubmit = async () => {
     try {
       await axios.post(
-        `https://rmp-backend.vercel.app/api/rate/${profID}`,
+        `https://rmp-backend.onrender.com/api/rate/${profID}`,
         { rating, feedback },
         { withCredentials: true }
       );

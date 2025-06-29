@@ -14,7 +14,7 @@ const ReviewedProfessorsPage = () => {
   useEffect(() => {
     const fetchReviewedProfessors = async () => {
       try {
-        const res = await axios.get('https://rmp-backend.vercel.app/api/reviewed', {
+        const res = await axios.get('https://rmp-backend.onrender.com/api/reviewed', {
           withCredentials: true,
         });
         setProfessors(res.data);
@@ -37,7 +37,7 @@ const ReviewedProfessorsPage = () => {
     if (!confirm) return;
 
     try {
-      const res = await axios.delete(`https://rmp-backend.vercel.app/api/review/${profID}`, {
+      const res = await axios.delete(`https://rmp-backend.onrender.com/api/review/${profID}`, {
         withCredentials: true,
       });
 

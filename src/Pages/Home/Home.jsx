@@ -12,7 +12,7 @@ const Home = ({ user }) => {
   const fetchProfessors = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await axios.get(`https://rmp-backend.vercel.app/api/professors`);
+      const res = await axios.get(`https://rmp-backend.onrender.com/api/professors`);
       setProfessors(res.data);
     } catch (error) {
       console.error('Error fetching professors:', error);
@@ -24,7 +24,7 @@ const Home = ({ user }) => {
   const fetchReviewed = useCallback(async () => {
     if (!user) return;
     try {
-      const res = await axios.get(`https://rmp-backend.vercel.app/api/reviewed`, {
+      const res = await axios.get(`https://rmp-backend.onrender.com/api/reviewed`, {
         withCredentials: true,
       });
       const ids = res.data.map((p) => p.profID);

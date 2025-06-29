@@ -24,7 +24,7 @@ const App = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await fetch('https://rmp-backend.vercel.app/api/login/success', {
+        const res = await fetch('https://rmp-backend.onrender.com/api/login/success', {
           method: 'GET',
           credentials: 'include'
         });

@@ -28,7 +28,7 @@ const ProfCard = ({ name, profID, rating, feedbacks = [], user }) => {
       async ([entry]) => {
         if (entry.isIntersecting) {
           try {
-            const res = await axios.get(`https://rmp-backend.vercel.app/api/professor/${profID}/image`);
+            const res = await axios.get(`https://rmp-backend.onrender.com/api/professor/${profID}/image`);
             const cloudinaryUrl = res.data.imageUrl;
             imageCache.set(profID, cloudinaryUrl);
             setImage(cloudinaryUrl);
@@ -51,7 +51,7 @@ const ProfCard = ({ name, profID, rating, feedbacks = [], user }) => {
     const fetchUserRating = async () => {
       if (!user) return;
       try {
-        const res = await axios.get(`https://rmp-backend.vercel.app/api/rate/${profID}`, {
+        const res = await axios.get(`https://rmp-backend.onrender.com/api/rate/${profID}`, {
           withCredentials: true,
         });
         if (res.data?.rated) {
