@@ -124,6 +124,7 @@ const ProfCard = ({ name, profID, rating, feedbacks = [], user }) => {
           onNext={handleNextFeedback}
           onRate={handleRateClick}
           onClose={() => setModalOpen(false)}
+          reviewed={hasRated} 
         />
       )}
     </>
